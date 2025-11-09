@@ -38,9 +38,31 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/tasks', taskRoutes);
+// Root route
+app.get('/', (req, res) => {
+  res.json({
+    status: 'success',
+    message: 'Task Manager API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/health',
+      auth: {
+        register: 'POST /api/auth/register',
+        login: 'POST /api/auth/login',
+        me: 'GET /api/auth/me',
+        logout: 'POST /api/auth/logout'
+      },
+      tasks: {
+        getAll: 'GET /api/tasks',
+        getStats: 'GET /api/tasks/stats',
+        getOne: 'GET /api/tasks/:id',
+        create: 'POST /api/tasks',
+        update: 'PUT /api/tasks/:id',
+        delete: 'DELETE /api/tasks/:id'
+      }
+    }
+  });
+});
 
 // Health check route
 app.get('/api/health', (req, res) => {
@@ -51,11 +73,23 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({
     status: 'error',
-    message: 'Route not found'
+    message: 'Route not found',
+    path: req.originalUrl,
+    method: req.method,
+    availableEndpoints: {
+      root: 'GET /',
+      health: 'GET /api/health',
+      auth: '/api/auth/*',
+      tasks: '/api/tasks/*'
+    }
   });
 });
 
