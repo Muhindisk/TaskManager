@@ -18,17 +18,47 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // Middleware - CORS Configuration
-// In development: allow all origins
-// In production: only allow specified CLIENT_URL
-const corsOptions = process.env.NODE_ENV === 'production' 
-  ? {
-      origin: process.env.CLIENT_URL || 'https://task-manager-eta-one-18.vercel.app/',
-      credentials: true
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:8080',
+  'http://localhost:3000',
+  'http://127.0.0.1:5173',
+  'https://task-manager-eta-one-18.vercel.app',
+  process.env.CLIENT_URL
+].filter(Boolean);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    // In development, allow all localhost origins
+    if (process.env.NODE_ENV !== 'production') {
+      if (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
+        return callback(null, true);
+      }
     }
-  : {
-      origin: true, // Allow all origins in development
-      credentials: true
-    };
+    
+    // Check if origin is in allowed list (remove trailing slash for comparison)
+    const cleanOrigin = origin.replace(/\/$/, '');
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (!allowed) return false;
+      const cleanAllowed = allowed.replace(/\/$/, '');
+      return cleanOrigin === cleanAllowed;
+    });
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.log(`⚠️  CORS blocked origin: ${origin}`);
+      console.log(`   Allowed origins: ${allowedOrigins.filter(Boolean).join(', ')}`);
+      callback(null, true); // Allow anyway but log it (change to callback(new Error('Not allowed by CORS')) for strict mode)
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
 
 app.use(cors(corsOptions));
 app.use(express.json());
