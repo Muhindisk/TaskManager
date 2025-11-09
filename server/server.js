@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import connectDB from './config/db.js';
 import taskRoutes from './routes/taskRoutes.js';
 import authRoutes from './routes/authRoutes.js';
@@ -61,10 +62,21 @@ app.get('/', (req, res) => {
 
 // Health check route
 app.get('/api/health', (req, res) => {
+  const dbState = {
+    0: 'Disconnected',
+    1: 'Connected',
+    2: 'Connecting',
+    3: 'Disconnecting'
+  };
+  
   res.json({
     status: 'success',
     message: 'Task Manager API is running',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    database: {
+      status: dbState[mongoose.connection.readyState] || 'Unknown',
+      state: mongoose.connection.readyState
+    }
   });
 });
 
