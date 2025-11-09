@@ -11,13 +11,11 @@ A modern, feature-rich task management application built with the MERN stack (Mo
 ## 🌐 Live Demo
 
 ### **Frontend (Client)**
-🔗 **Live URL:** [https://your-client-app.vercel.app](https://your-client-app.vercel.app)
+🔗 **Live URL:** [Client](https://task-manager-eta-one-18.vercel.app/)
 
 ### **Backend (Server)**
-🔗 **API URL:** [https://your-server-app.railway.app](https://your-server-app.railway.app)  
-📡 **API Health Check:** [https://your-server-app.railway.app/api/health](https://your-server-app.railway.app/api/health)
-
-> **Note:** Replace the URLs above with your actual deployed links after deployment.
+🔗 **API URL:** [Server](https://taskmanager-x2io.onrender.com)  
+📡 **API Health Check:** [Health](https://taskmanager-x2io.onrender.com/api/health)
 
 ---
 
