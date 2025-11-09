@@ -19,6 +19,8 @@ connectDB();
 // Middleware
 const allowedOrigins = [
   'http://localhost:8080',
+  'http://localhost:5173', // Vite default port
+  'http://localhost:3000', // Alternative port
   process.env.CLIENT_URL, // Your production frontend URL
 ].filter(Boolean);
 
@@ -30,6 +32,8 @@ app.use(cors({
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
+      // Log blocked origins for debugging
+      console.log(`⚠️  CORS blocked origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
