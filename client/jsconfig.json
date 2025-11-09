@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "target": "ES2020",
+    "module": "ESNext",
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": false,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "checkJs": false,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

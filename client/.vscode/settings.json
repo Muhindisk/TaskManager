@@ -1,0 +1,14 @@
+{
+  "typescript.validate.enable": false,
+  "javascript.validate.enable": true,
+  "files.exclude": {
+    "**/*.tsx": true,
+    "**/*.ts": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.tsx": true,
+    "**/*.ts": true
+  }
+}
