@@ -16,43 +16,20 @@ const PORT = process.env.PORT || 5000;
 // Connect to MongoDB
 connectDB();
 
-// Middleware
-const allowedOrigins = [
-  'http://localhost:8080',
-  'http://localhost:5173', // Vite default port
-  'http://localhost:3000', // Alternative port
-  'http://localhost:4173', // Vite preview
-  'http://127.0.0.1:8080',
-  'http://127.0.0.1:5173',
-  'http://127.0.0.1:3000',
-  'http://127.0.0.1:4173',
-  process.env.CLIENT_URL, // Your production frontend URL
-].filter(Boolean);
+// Middleware - CORS Configuration
+// In development: allow all origins
+// In production: only allow specified CLIENT_URL
+const corsOptions = process.env.NODE_ENV === 'production' 
+  ? {
+      origin: process.env.CLIENT_URL || 'https://task-manager-eta-one-18.vercel.app/',
+      credentials: true
+    }
+  : {
+      origin: true, // Allow all origins in development
+      credentials: true
+    };
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    // In development, allow all localhost/127.0.0.1 origins
-    if (process.env.NODE_ENV !== 'production') {
-      if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
-        return callback(null, true);
-      }
-    }
-    
-    // Check against whitelist
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      // Log blocked origins for debugging
-      console.log(`⚠️  CORS blocked origin: ${origin}`);
-      console.log(`   Allowed origins: ${allowedOrigins.join(', ')}`);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-}));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
